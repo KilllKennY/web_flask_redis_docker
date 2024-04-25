@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from redis import Redis
 
 app = Flask(__name__)
@@ -11,18 +11,16 @@ def hello():
 
 
 @app.route('/test/<string:key>', methods=['GET'])
-def det_tasks(key):
-    return redis.get('key')
+def det_value(key):
+    value = redis.get(key)
+    return value if value is not None else f'Key: {key} not found'
 
-
-@app.route('/test/', methods=['POST'])
-def create_task(key, value):
-    return redis.set(key, value)
-
-
-@app.route('/test/<string:key>', methods=['PUT'])
-def update_task(key, value):
-    return redis.set(key, value)
+@app.route('/test/', methods=['POST', 'PUT'])
+def create_value():
+    key = request.json['key']
+    value = request.json['value']
+    redis.set(key, value)
+    return f'Data created: {key}: {value}'
 
 
 if __name__ == "__main__":
