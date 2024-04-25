@@ -2,7 +2,7 @@ version: '3'
 services:
 
   web:
-    build: .app.py
+    build: .
     ports:
      - "5000:8080"
     volumes:
